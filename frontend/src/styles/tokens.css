@@ -1,0 +1,59 @@
+/* ── Whaatachi Design Tokens ── */
+:root {
+  /* Colors */
+  --rose:        #E91E8C;
+  --rose-deep:   #C2185B;
+  --navy:        #0D1B2A;
+  --blue:        #1565C0;
+  --blue-light:  #E3F2FD;
+  --white:       #FFFFFF;
+  --gray-soft:   #F8F9FA;
+  --gray-mid:    #9E9E9E;
+  --gray-border: #E0E0E0;
+
+  /* Gradients */
+  --gradient-rose: linear-gradient(135deg, #E91E8C 0%, #C2185B 50%, #1565C0 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(233,30,140,0.9) 0%, rgba(194,24,91,0.85) 50%, rgba(21,101,192,0.9) 100%);
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Sizes */
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+  --text-5xl:  48px;
+  --text-6xl:  64px;
+
+  /* Radii */
+  --radius-card:   16px;
+  --radius-btn:    50px;
+  --radius-input:  12px;
+  --radius-avatar: 50%;
+
+  /* Shadows */
+  --shadow-card:     0 8px 32px rgba(233,30,140,0.08);
+  --shadow-elevated: 0 20px 60px rgba(13,27,42,0.15);
+  --shadow-rose:     0 8px 24px rgba(233,30,140,0.3);
+
+  /* Transitions */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}

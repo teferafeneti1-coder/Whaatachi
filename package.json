@@ -1,0 +1,10 @@
+{
+  "name": "whaatachi",
+  "version": "1.0.0",
+  "description": "Premium Ethiopian social connection platform",
+  "scripts": {
+    "backend": "cd backend && node server.js",
+    "frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  }
+}
