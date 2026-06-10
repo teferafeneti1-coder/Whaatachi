@@ -36,6 +36,21 @@ app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', db: 'supabase', timestamp: new Date().toISOString() })
 );
 
+// Root route — shows API info instead of 404
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Whaatachi API',
+    status: '✅ running',
+    version: '1.0.0',
+    docs: {
+      health: '/api/health',
+      users: '/api/users',
+      payments: '/api/payments',
+      admin: '/api/admin',
+    },
+  });
+});
+
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
 app.use((err, req, res, next) => {
@@ -83,11 +98,13 @@ async function start() {
   }
 
   app.listen(PORT, () => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+    const backendUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
     console.log('');
     console.log('🚀 ─────────────────────────────────────────');
-    console.log(`   Backend:   http://localhost:${PORT}`);
-    console.log(`   Frontend:  http://localhost:5174`);
-    console.log(`   Admin:     http://localhost:5174/admin/login`);
+    console.log(`   Backend:   ${backendUrl}`);
+    console.log(`   Frontend:  ${frontendUrl}`);
+    console.log(`   Admin:     ${frontendUrl}/admin/login`);
     console.log('────────────────────────────────────────────');
   });
 }
