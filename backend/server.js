@@ -16,8 +16,19 @@ app.use(morgan('dev'));
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow no-origin requests (Postman, curl) and any localhost port
-    if (!origin || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+    // Allow no-origin (Postman, curl, mobile)
+    if (!origin) return cb(null, true);
+    // Allow any localhost port (dev)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+    // Allow any vercel.app subdomain
+    if (/\.vercel\.app$/.test(origin)) return cb(null, true);
+    // Allow any onrender.com subdomain
+    if (/\.onrender\.com$/.test(origin)) return cb(null, true);
+    // Allow configured FRONTEND_URL (strip trailing slash for comparison)
+    const allowed = (process.env.FRONTEND_URL || '').replace(/\/$/, '');
+    if (allowed && origin === allowed) return cb(null, true);
+    // Log rejected origin for debugging
+    console.log('CORS blocked:', origin);
     cb(null, false);
   },
   credentials: true,
