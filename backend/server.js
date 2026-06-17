@@ -74,14 +74,29 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 async function start() {
-  // Quick connectivity test via Supabase
+  // Start server first — don't block on DB
+  app.listen(PORT, () => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+    const backendUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+    console.log('');
+    console.log('🚀 ─────────────────────────────────────────');
+    console.log(`   Backend:   ${backendUrl}`);
+    console.log(`   Frontend:  ${frontendUrl}`);
+    console.log(`   Admin:     ${frontendUrl}/admin/login`);
+    console.log('────────────────────────────────────────────');
+  });
+
+  // Then test Supabase
   console.log('🔌 Testing Supabase connection...');
+  console.log('   SUPABASE_URL:', process.env.SUPABASE_URL ? '✅ set' : '❌ MISSING');
+  console.log('   SUPABASE_SERVICE_KEY:', process.env.SUPABASE_SERVICE_KEY ? '✅ set' : '❌ MISSING');
+
   const { error } = await supabase.from('users').select('id').limit(1);
 
-  if (error && error.code !== 'PGRST116') {  // PGRST116 = "table empty" — that's fine
+  if (error && error.code !== 'PGRST116') {
     console.error('❌ Supabase connection failed:', error.message);
-    console.error('   Check SUPABASE_URL and SUPABASE_SERVICE_KEY in .env');
-    process.exit(1);
+    console.error('   Server still running — fix env vars and redeploy');
+    return; // Don't exit — keep server alive
   }
 
   console.log('✅ Supabase connected!');
@@ -107,17 +122,6 @@ async function start() {
   } else {
     console.log('👤 Admin user exists');
   }
-
-  app.listen(PORT, () => {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
-    const backendUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-    console.log('');
-    console.log('🚀 ─────────────────────────────────────────');
-    console.log(`   Backend:   ${backendUrl}`);
-    console.log(`   Frontend:  ${frontendUrl}`);
-    console.log(`   Admin:     ${frontendUrl}/admin/login`);
-    console.log('────────────────────────────────────────────');
-  });
 }
 
 start().catch((err) => {
