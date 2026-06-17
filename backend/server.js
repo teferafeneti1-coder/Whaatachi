@@ -62,7 +62,38 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
+// ONE-TIME admin reset endpoint — secured with a secret token
+app.get('/setup-admin', async (req, res) => {
+  const secret = req.query.secret;
+  if (secret !== 'whaatachi-setup-2024') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  try {
+    const bcrypt = require('bcryptjs');
+    const hash = await bcrypt.hash('admin123', 12);
+    // Delete existing admins
+    await supabase.from('users').delete().eq('is_admin', true);
+    // Create fresh admin
+    const { data, error } = await supabase.from('users').insert([{
+      full_name: 'admin',
+      gender: 'male',
+      connection_goal: 'relationship',
+      is_admin: true,
+      is_approved: true,
+      password_hash: hash,
+      photo_url: '',
+      telegram_username: '',
+      phone_number: '',
+      instagram_username: '',
+    }]).select('id, full_name').single();
+    if (error) throw error;
+    res.json({ success: true, message: 'Admin reset! Login: admin / admin123', id: data.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 app.use((err, req, res, next) => {
   console.error(err);
