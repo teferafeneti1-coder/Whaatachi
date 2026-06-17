@@ -124,3 +124,13 @@ start().catch((err) => {
   console.error('Fatal startup error:', err);
   process.exit(1);
 });
+
+// Keep-alive ping — prevents Render free tier from sleeping
+if (process.env.RENDER_EXTERNAL_URL) {
+  const https = require('https');
+  setInterval(() => {
+    https.get(`${process.env.RENDER_EXTERNAL_URL}/api/health`, (res) => {
+      console.log(`🏓 Keep-alive ping: ${res.statusCode}`);
+    }).on('error', () => {});
+  }, 10 * 60 * 1000); // every 10 minutes
+}
